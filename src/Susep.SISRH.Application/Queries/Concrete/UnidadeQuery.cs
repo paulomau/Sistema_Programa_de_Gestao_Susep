@@ -1,9 +1,7 @@
 ﻿using Dapper;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using Susep.SISRH.Application.Queries.Abstractions;
 using Susep.SISRH.Application.Queries.RawSql;
-using Susep.SISRH.Application.Requests;
 using Susep.SISRH.Application.ViewModels;
 using Susep.SISRH.Domain.Enums;
 using SUSEP.Framework.Result.Abstractions;
@@ -204,7 +202,7 @@ namespace Susep.SISRH.Application.Queries.Concrete
             {
                 connection.Open();
 
-                var dados = await connection.QueryAsync<PessoaViewModel>(UnidadeRawSqls.ObterPessoasDiretamenteAlocadasPorUnidade, parameters);
+                var dados = (await connection.QueryAsync<PessoaViewModel>(UnidadeRawSqls.ObterPessoasDiretamenteAlocadasPorUnidade, parameters)).OrderBy(a => a.Nome);
                 result.Result = dados.Select(it => new DadosComboViewModel() { Id = it.PessoaId.ToString(), Descricao = it.Nome });
 
                 connection.Close();
